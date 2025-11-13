@@ -1,0 +1,161 @@
+<% layout("/layouts/boilerplate") %>
+<div class="row">
+    <div class="col-8 offset-2">
+        <h3>Create New Listing</h3>
+        <form method="POST" action="/listings" novalidate class="needs-validation" enctype="multipart/form-data">
+            
+            <!-- Title -->
+            <div class="mb-3">
+                <label for="title" class="form-label">Title</label>
+                <input name="listing[title]" 
+                       placeholder="Enter title" 
+                       type="text"
+                       class="form-control"
+                       required />
+                <div class="valid-feedback">Title looks good!</div>
+                <div class="invalid-feedback">Please enter a valid title</div>
+            </div>
+
+            <!-- Description -->
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea name="listing[description]" 
+                          placeholder="Enter description" 
+                          class="form-control" 
+                          required></textarea>
+                <div class="valid-feedback">Description looks good!</div>
+                <div class="invalid-feedback">Please enter a valid description</div>
+            </div>
+
+            <!-- Image Upload -->
+            <div class="mb-3">
+                <label for="image" class="form-label">Upload Image</label>
+                <input name="listing[image]" type="file" class="form-control" required />
+                <div class="invalid-feedback">Please upload an image</div>
+            </div>
+
+            <div class="row">
+                <!-- Price -->
+                <div class="mb-3 col-md-4">
+                 <label for="price" class="form-label">Price (₹)</label>
+                    <input name="listing[price]" 
+                           placeholder="1200" 
+                           type="number"
+                           class="form-control"
+                           required />
+                    <div class="invalid-feedback">Please enter a valid price</div>
+                </div>
+
+                <!-- Country -->
+                <div class="mb-3 col-md-8">
+                    <label for="country" class="form-label">Country</label>
+                    <input name="listing[country]" 
+                           placeholder="Enter country"
+                           type="text"
+                           class="form-control"
+                           required />
+                    <div class="invalid-feedback">Please enter a valid country</div>
+                </div>
+            </div>
+
+            <!-- Location -->
+            <div class="mb-3">
+                <label for="location" class="form-label">Location</label>
+                <input name="listing[location]" 
+                       placeholder="Enter location" 
+                       type="text"
+                       class="form-control"
+                       required />
+                <div class="valid-feedback">Location looks good!</div>
+                <div class="invalid-feedback">Please enter a valid location</div>
+            </div>
+
+            <!-- Category -->
+            <div class="form-group mb-3">
+                <label for="category" class="form-label">Choose a Category:</label>
+                <select name="listing[category]" id="category" class="form-control" required>
+                    <% let categories = ["new-listings", "apartments", "villas", "luxury", "beachfront", "garden-homes", "penthouses", "family-friendly", "commercial", "plots"]; %>
+                    <% categories.forEach(category => { %>
+                        <option value="<%= category %>"><%= category.replace('-', ' ') %></option>
+                    <% }); %>
+                </select>
+            </div>
+
+            <!-- Live Auction Option -->
+<div class="form-check mb-3">
+    <input class="form-check-input" type="checkbox" id="isAuction" name="listing[isAuction]" value="true">
+    <label class="form-check-label" for="isAuction">Enable Live Auction</label>
+</div>
+
+<!-- Auction Duration (Hidden by Default) -->
+<div id="auctionFields" style="display: none;">
+    <div class="mb-3">
+        <label for="auctionDays" class="form-label">Auction Duration (Days)</label>
+        <input 
+            type="number" 
+            class="form-control" 
+            id="auctionDays"
+            min="1"
+            name="listing[auctionDays]" 
+            placeholder="Enter number of days" 
+            required />
+    </div>
+</div>
+
+<!-- Hidden Fields to auto-fill Start & End -->
+<input type="hidden" id="auctionStartTime" name="listing[auctionStartTime]" />
+<input type="hidden" id="auctionEndTime" name="listing[auctionEndTime]" />
+
+<script>
+    const isAuctionCheckbox = document.getElementById("isAuction");
+    const auctionFields = document.getElementById("auctionFields");
+    const auctionDaysInput = document.getElementById("auctionDays");
+    const auctionStartInput = document.getElementById("auctionStartTime");
+    const auctionEndInput = document.getElementById("auctionEndTime");
+
+    isAuctionCheckbox.addEventListener("change", function() {
+        if (this.checked) {
+            auctionFields.style.display = "block";
+            setAuctionTimes(); // calculate default
+        } else {
+            auctionFields.style.display = "none";
+            auctionStartInput.value = "";
+            auctionEndInput.value = "";
+        }
+    });
+
+    auctionDaysInput.addEventListener("input", setAuctionTimes);
+
+    function setAuctionTimes() {
+        if (!isAuctionCheckbox.checked) return;
+
+        const now = new Date();
+        const days = parseInt(auctionDaysInput.value) || 1;
+
+        // Start = Now
+        auctionStartInput.value = now.toISOString();
+
+        // End = Now + Days
+        const end = new Date(now.getTime() + days * 24 * 60 * 60 * 1000);
+        auctionEndInput.value = end.toISOString();
+    }
+</script>
+
+            <!-- Submit Button -->
+            <button class="btn btn-primary" type="submit">Save</button>
+            <br><br>
+        </form>
+    </div>
+</div>
+
+<script>
+    // Show/Hide Auction Fields
+    document.getElementById("isAuction").addEventListener("change", function() {
+        let auctionFields = document.getElementById("auctionFields");
+        if (this.checked) {
+            auctionFields.style.display = "block";
+        } else {
+            auctionFields.style.display = "none";
+        }
+    });
+</script>
