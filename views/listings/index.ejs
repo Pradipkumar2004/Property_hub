@@ -1,0 +1,166 @@
+<% layout("/layouts/boilerplate") %>
+
+<style>
+  /* Filter Section */
+  #filters {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+  }
+  .filter {
+    text-align: center;
+    opacity: 0.7;
+    transition: all 0.3s ease-in-out;
+  }
+  .filter:hover {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+  .filter p {
+    font-size: 0.9rem;
+    margin-top: 5px;
+  }
+
+  /* Tax Toggle */
+  .tax-toggle {
+    border: 1px solid black;
+    border-radius: 12px;
+    height: 3rem;
+    padding: 0.5rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  /* Listings Grid */
+  .listing-link {
+    text-decoration: none;
+    color: black;
+  }
+
+  .card {
+    width: 100%;
+    transition: transform 0.3s ease-in-out;
+  }
+  .card:hover {
+    transform: translateY(-5px);
+  }
+
+  .card img {
+    height: 16rem;
+    object-fit: cover;
+    border-radius: 10px 10px 0 0;
+  }
+
+  /* Responsive Grid */
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  @media (min-width: 992px) {
+  .col-md-6 {
+    flex: 0 0 32%;
+    max-width: 32%;
+  }
+}
+
+@media (max-width: 991px) and (min-width: 768px) {
+  .col-md-6 {
+    flex: 0 0 48%;
+    max-width: 48%;
+  }
+}
+
+@media (max-width: 767px) {
+  .col-md-6 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+}
+
+  
+</style>
+
+<div id="filters">
+  <a href="/listings/filter/new-listings" class="filter">
+    <div><i class="fa-solid fa-bell"></i></div> 
+    <p>New Listings</p>
+  </a>
+  <a href="/listings/filter/apartments" class="filter">
+    <div><i class="fa-solid fa-building"></i></div> 
+    <p>Apartments</p>
+  </a>
+  <a href="/listings/filter/villas" class="filter">
+    <div><i class="fa-solid fa-house-chimney"></i></div> 
+    <p>Villas</p>
+  </a>
+  <a href="/listings/filter/luxury" class="filter">
+    <div><i class="fa-solid fa-gem"></i></div> 
+    <p>Luxury</p>
+  </a>
+  <a href="/listings/filter/beachfront" class="filter">
+    <div><i class="fa-solid fa-umbrella-beach"></i></div> 
+    <p>Beachfront</p>
+  </a>
+  <a href="/listings/filter/garden" class="filter">
+    <div><i class="fa-solid fa-seedling"></i></div> 
+    <p>Garden Homes</p>
+  </a>
+  <a href="/listings/filter/penthouses" class="filter">
+    <div><i class="fa-solid fa-city"></i></div> 
+    <p>Penthouses</p>
+  </a>
+  <a href="/listings/filter/family-friendly" class="filter">
+    <div><i class="fa-solid fa-child"></i></div> 
+    <p>Family-Friendly</p>
+  </a>
+  <a href="/listings/filter/commercial" class="filter">
+    <div><i class="fa-solid fa-briefcase"></i></div> 
+    <p>Commercial</p>
+  </a>
+  <a href="/listings/filter/plots" class="filter">
+    <div><i class="fa-solid fa-map"></i></div> 
+    <p>Land/Plots</p>
+  </a>
+</div>
+
+<div class="row">
+  <% for(let listing of allListing){ %>
+    <a href="/listings/<%= listing._id %>" class="col-md-6 col-lg-4 listing-link">
+      <div class="card">
+        <img src="<%= listing.image.url %>" class="card-img-top" alt="listing_img">
+        <div class="card-body">
+          <p class="card-text">
+            <b><%= listing.title %></b><br>
+            ₹ <% if (listing.price !== undefined && listing.price !== null) { %>
+              <%= listing.price.toLocaleString("en-IN") %>
+            <% } else { %>
+              Price not available
+            <% } %>        
+            <br>
+            <b><%= listing.location %></b><br>
+
+          </p>
+        </div>
+      </div>
+    </a>
+  <% } %>
+</div>
+
+<script>
+  let taxswitch = document.getElementById("flexSwitchCheckDefault");
+  taxswitch.addEventListener("click", () => {
+    let taxinfo = document.getElementsByClassName("tax-info");
+    for (let info of taxinfo) {
+      info.style.display = (info.style.display !== "inline") ? "inline" : "none";
+    }
+  });
+</script>
